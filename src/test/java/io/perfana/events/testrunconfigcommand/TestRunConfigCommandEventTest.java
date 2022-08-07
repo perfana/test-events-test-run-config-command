@@ -21,10 +21,10 @@ import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.log.EventLoggerStdOut;
 import org.junit.jupiter.api.Test;
 
-public class TestRunConfigCommandEventTest {
+class TestRunConfigCommandEventTest {
 
     @Test
-    public void beforeTestKeyValue() {
+    void beforeTestKeyValue() {
         TestRunConfigCommandEventConfig eventConfig = new TestRunConfigCommandEventConfig();
         eventConfig.setEventFactory(TestRunConfigCommandEventFactory.class.getSimpleName());
         eventConfig.setName("GitGetHash");
@@ -40,14 +40,9 @@ public class TestRunConfigCommandEventTest {
         TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventConfig.toContext(), messageBus, EventLoggerStdOut.INSTANCE);
         event.beforeTest();
         event.keepAlive();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        shortSleep();
         event.abortTest();
         event.afterTest();
-
 
         // not much to assert really... just look at System.out and
         // check it does not blow with an Exception...
@@ -55,13 +50,14 @@ public class TestRunConfigCommandEventTest {
     }
 
     @Test
-    public void beforeTestJson() {
+    void beforeTestJson() {
         TestRunConfigCommandEventConfig eventConfig = new TestRunConfigCommandEventConfig();
         eventConfig.setEventFactory(TestRunConfigCommandEventFactory.class.getSimpleName());
         eventConfig.setName("KubernetesGetDeployment");
         eventConfig.setEnabled(true);
         eventConfig.setTestConfig(TestConfig.builder().build());
-        eventConfig.setCommand("kubectl get deployment -n acme -o=json optimus-prime-be-afterburner");
+        //eventConfig.setCommand("kubectl get deployment -n acme -o=json optimus-prime-be-afterburner");
+        eventConfig.setCommand("echo { \"test\": 123 }");
         eventConfig.setOutput("json");
         eventConfig.setInclude("env,resources,image,replicas,strategy,kubernetes");
         eventConfig.setExclude("status");
@@ -72,18 +68,21 @@ public class TestRunConfigCommandEventTest {
         TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventConfig.toContext(), messageBus, EventLoggerStdOut.INSTANCE);
         event.beforeTest();
         event.keepAlive();
+        shortSleep();
+        event.abortTest();
+        event.afterTest();
+
+        // not much to assert really... just look at System.out and
+        // check it does not blow with an Exception...
+
+    }
+
+    private void shortSleep() {
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        event.abortTest();
-        event.afterTest();
-
-
-        // not much to assert really... just look at System.out and
-        // check it does not blow with an Exception...
-
     }
 
 }

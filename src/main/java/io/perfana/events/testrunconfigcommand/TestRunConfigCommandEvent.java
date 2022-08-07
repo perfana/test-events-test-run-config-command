@@ -22,12 +22,10 @@ import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.exception.EventSchedulerRuntimeException;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
-import org.zeroturnaround.exec.ProcessResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
@@ -57,7 +55,7 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                     .command(commandList)
                     .readOutput(true)
                     .redirectError(new PrefixedRedirectOutput(eventContext.getName() + ": ", System.err))
-                    .timeout(1, TimeUnit.MICROSECONDS)
+                    .timeout(30, TimeUnit.SECONDS)
                     .exitValue(0)
                     .execute()
                     .outputUTF8();

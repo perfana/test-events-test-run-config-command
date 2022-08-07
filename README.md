@@ -1,6 +1,6 @@
 # test-events-test-run-config-command
 
-Run a command to capture test-run configuration data and broadcast this on the event-bus. 
+Run a command to capture test-run configuration data and broadcast this on the event message bus. 
 
 Test-run config can be sent as key-value pair or as json structure.
 
