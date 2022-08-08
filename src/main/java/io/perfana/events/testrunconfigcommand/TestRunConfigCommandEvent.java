@@ -66,8 +66,8 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                     .variable("output", eventContext.getOutput())
                     .variable("key", eventContext.getKey())
                     .variable("tags", eventContext.getTags())
-                    .variable("exclude", eventContext.getExclude())
-                    .variable("include", eventContext.getInclude())
+                    .variable("excludes", eventContext.getExcludes())
+                    .variable("includes", eventContext.getIncludes())
                     .message(commandOutput).build();
 
             this.eventMessageBus.send(message);

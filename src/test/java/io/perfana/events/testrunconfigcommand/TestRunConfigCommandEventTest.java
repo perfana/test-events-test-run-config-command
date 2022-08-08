@@ -59,8 +59,8 @@ class TestRunConfigCommandEventTest {
         //eventConfig.setCommand("kubectl get deployment -n acme -o=json optimus-prime-be-afterburner");
         eventConfig.setCommand("echo { \"test\": 123 }");
         eventConfig.setOutput("json");
-        eventConfig.setInclude("env,resources,image,replicas,strategy,kubernetes");
-        eventConfig.setExclude("status");
+        eventConfig.setIncludes("env,resources,image,replicas,strategy,kubernetes");
+        eventConfig.setExcludes("status");
         eventConfig.setTags("k8s,optimus-prime-be");
 
         EventMessageBus messageBus = new EventMessageBusSimple();

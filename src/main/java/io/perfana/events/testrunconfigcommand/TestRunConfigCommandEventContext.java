@@ -22,23 +22,21 @@ import net.jcip.annotations.Immutable;
 public class TestRunConfigCommandEventContext extends EventContext {
 
     private final String command;
-    private String output;
-    private String include;
-    private String exclude;
-    private String key;
-    private String tags;
+    private final String output;
+    private final String includes;
+    private final String excludes;
+    private final String key;
+    private final String tags;
 
-    protected TestRunConfigCommandEventContext(EventContext context, String command, String output, String include, String exclude, String key, String tags) {
+    protected TestRunConfigCommandEventContext(EventContext context, String command, String output, String includes, String excludes, String key, String tags) {
         super(context, TestRunConfigCommandEventFactory.class.getName(), false);
         this.command = command;
         this.output = output;
-        this.include = include;
-        this.exclude = exclude;
+        this.includes = includes;
+        this.excludes = excludes;
         this.key = key;
         this.tags = tags;
     }
-
-
 
     public String getCommand() {
         return command;
@@ -48,12 +46,12 @@ public class TestRunConfigCommandEventContext extends EventContext {
         return output;
     }
 
-    public String getInclude() {
-        return include;
+    public String getIncludes() {
+        return includes;
     }
 
-    public String getExclude() {
-        return exclude;
+    public String getExcludes() {
+        return excludes;
     }
 
     public String getKey() {

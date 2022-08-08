@@ -36,20 +36,20 @@ Tags are used to specify the type of configuration data (e.g. GitHub or k8s).
                     <tags>${tags}</tags>
                 </testConfig>
                 <eventConfigs>
-                    <eventConfig implementation="io.perfana.events.testrunconfigcommand.event.TestRunConfigCommandEventConfig">
+                    <eventConfig implementation="io.perfana.events.testrunconfigcommand.TestRunConfigCommandEventConfig">
                         <name>GitGetHash</name>
                         <command>git rev-parse --verify HEAD</command>
                         <output>key</output>
                         <key>https://github.com/perfana/perfana-gatling-afterburner</key>
-                        <tags>GitHub,optimus-prime-be</tags>
+                        <tags>GitHub</tags>
                     </eventConfig>
-                    <eventConfig implementation="io.perfana.events.testrunconfigcommand.event.TestRunConfigCommandEventConfig">
+                    <eventConfig implementation="io.perfana.events.testrunconfigcommand.TestRunConfigCommandEventConfig">
                         <name>KubernetesGetDeployment</name>
-                        <command>kubectl get deployment -n acme -o=json optimus-prime-be-afterburner</command>
-                        <include>env,resources,image,replicas,strategy,kubernetes</include>
-                        <exclude>status</exclude>
+                        <command>kubectl get deployment optimus-prime-be-afterburner -n acme -ojson</command>
+                        <includes>env,resources,image,replicas,strategy,kubernetes</includes>
+                        <excludes>status</excludes>
                         <output>json</output>
-                        <tags>k8s,optimus-prime-be</tags>
+                        <tags>kubernetes,optimus-prime-be</tags>
                     </eventConfig>
                 </eventConfigs>
             </eventSchedulerConfig>

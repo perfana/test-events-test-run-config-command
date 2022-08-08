@@ -24,19 +24,19 @@ public class TestRunConfigCommandEventConfig extends EventConfig {
 
     private String command;
     private String output;
-    private String include;
-    private String exclude;
+    private String includes;
+    private String excludes;
     private String key;
     private String tags;
 
     @Override
     public TestRunConfigCommandEventContext toContext() {
-        return new TestRunConfigCommandEventContext(super.toContext(), command, output, include, exclude, key, tags);
+        return new TestRunConfigCommandEventContext(super.toContext(), command, output, includes, excludes, key, tags);
     }
 
     @Override
     public TestRunConfigCommandEventContext toContext(TestContext override) {
-        return new TestRunConfigCommandEventContext(super.toContext(override), command, output, include, exclude, key, tags);
+        return new TestRunConfigCommandEventContext(super.toContext(override), command, output, includes, excludes, key, tags);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class TestRunConfigCommandEventConfig extends EventConfig {
         return "TestRunConfigCommandEventConfig{" +
                 "command='" + command + '\'' +
                 ", output='" + output + '\'' +
-                ", include='" + include + '\'' +
-                ", exclude='" + exclude + '\'' +
+                ", include='" + includes + '\'' +
+                ", exclude='" + excludes + '\'' +
                 ", key='" + key + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
@@ -66,20 +66,20 @@ public class TestRunConfigCommandEventConfig extends EventConfig {
         this.output = output;
     }
 
-    public String getInclude() {
-        return include;
+    public String getIncludes() {
+        return includes;
     }
 
-    public void setInclude(String include) {
-        this.include = include;
+    public void setIncludes(String includes) {
+        this.includes = includes;
     }
 
-    public String getExclude() {
-        return exclude;
+    public String getExcludes() {
+        return excludes;
     }
 
-    public void setExclude(String exclude) {
-        this.exclude = exclude;
+    public void setExcludes(String excludes) {
+        this.excludes = excludes;
     }
 
     public String getKey() {
