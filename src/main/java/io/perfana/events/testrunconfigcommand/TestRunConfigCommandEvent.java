@@ -26,6 +26,7 @@ import org.zeroturnaround.exec.ProcessExecutor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
@@ -60,17 +61,15 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                     .execute()
                     .outputUTF8();
 
-            EventMessage message = EventMessage.builder()
-                    .pluginName(pluginName)
-                    .variable("message-type", "test-run-config")
-                    .variable("output", eventContext.getOutput())
-                    .variable("key", eventContext.getKey())
-                    .variable("tags", eventContext.getTags())
-                    .variable("excludes", eventContext.getExcludes())
-                    .variable("includes", eventContext.getIncludes())
-                    .message(commandOutput).build();
-
-            this.eventMessageBus.send(message);
+            String output = eventContext.getOutput();
+            if ("keys".equals(output)) {
+                // flatten json, apply filters
+                Map<String, String> flatJson = JsonConverter.flatten(commandOutput, eventContext.getIncludes(), eventContext.getExcludes());
+                flatJson.forEach((key, value) -> sendTestRunConfigMessage(pluginName, key, value, "key"));
+            } else {
+                EventMessage message = sendTestRunConfigMessage(pluginName, "", commandOutput, output);
+                this.eventMessageBus.send(message);
+            }
 
         } catch (InvalidExitValueException e) {
             throw new EventSchedulerRuntimeException("Unexpected exit value.", e);
@@ -83,6 +82,18 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
             throw new EventSchedulerRuntimeException("Got timeout for command [" + command + "]", e);
         }
 
+    }
+
+    private EventMessage sendTestRunConfigMessage(String pluginName, String key, String value, String output) {
+        return EventMessage.builder()
+                .pluginName(pluginName)
+                .variable("message-type", "test-run-config")
+                .variable("output", output)
+                .variable("key", key)
+                .variable("tags", eventContext.getTags())
+                .variable("excludes", eventContext.getExcludes())
+                .variable("includes", eventContext.getIncludes())
+                .message(value).build();
     }
 
     private List<String> splitCommand(String command) {
