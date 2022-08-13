@@ -109,8 +109,25 @@ public class JsonConverter {
     private static void addNameValuePairs(String pathPrefix, ArrayNode jsonNode, Map<String, String> map) {
         for (int i = 0; i < jsonNode.size(); i++) {
             JsonNode propNode = jsonNode.get(i);
-            map.put(pathPrefix + "." + i + "." + propNode.get("name").asText(), propNode.get("value").textValue());
+            String value = getK8sPropValue(propNode);
+            map.put(pathPrefix + "." + i + "." + propNode.get("name").asText(), value);
         }
+    }
+
+    private static String getK8sPropValue(JsonNode propNode) {
+        JsonNode node = propNode.get("value");
+        if (node == null) {
+            node = propNode.get("valueFrom");
+            if (node != null) {
+                Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+                String field = fields.hasNext() ? fields.next().getKey() : "unkown";
+                return "[valueFrom:" + field + "]";
+            }
+        }
+        if (node == null) {
+            return "[no value or valueFrom found]";
+        }
+        return node.textValue();
     }
 
     static List<String> commaSepToList(String commaSepList) {

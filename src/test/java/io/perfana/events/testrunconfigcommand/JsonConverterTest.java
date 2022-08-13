@@ -255,6 +255,292 @@ class JsonConverterTest {
             "    }\n" +
             "}";
 
+    private static final String MY_SQL_JSON = "{\n" +
+            "    \"apiVersion\": \"apps/v1\",\n" +
+            "    \"kind\": \"StatefulSet\",\n" +
+            "    \"metadata\": {\n" +
+            "        \"annotations\": {\n" +
+            "            \"meta.helm.sh/release-name\": \"afterburner-db\",\n" +
+            "            \"meta.helm.sh/release-namespace\": \"acme\"\n" +
+            "        },\n" +
+            "        \"creationTimestamp\": \"2022-07-06T12:27:53Z\",\n" +
+            "        \"generation\": 15,\n" +
+            "        \"labels\": {\n" +
+            "            \"app.kubernetes.io/component\": \"primary\",\n" +
+            "            \"app.kubernetes.io/instance\": \"afterburner-db\",\n" +
+            "            \"app.kubernetes.io/managed-by\": \"Helm\",\n" +
+            "            \"app.kubernetes.io/name\": \"mysql\",\n" +
+            "            \"helm.sh/chart\": \"mysql-9.2.6\",\n" +
+            "            \"helm.toolkit.fluxcd.io/name\": \"afterburner-db\",\n" +
+            "            \"helm.toolkit.fluxcd.io/namespace\": \"acme\"\n" +
+            "        },\n" +
+            "        \"name\": \"afterburner-db-mysql\",\n" +
+            "        \"namespace\": \"acme\",\n" +
+            "        \"resourceVersion\": \"13972072\",\n" +
+            "        \"uid\": \"9b683c74-8d0f-4ae0-b890-e5bc86e3c40b\"\n" +
+            "    },\n" +
+            "    \"spec\": {\n" +
+            "        \"podManagementPolicy\": \"OrderedReady\",\n" +
+            "        \"replicas\": 1,\n" +
+            "        \"revisionHistoryLimit\": 10,\n" +
+            "        \"selector\": {\n" +
+            "            \"matchLabels\": {\n" +
+            "                \"app.kubernetes.io/component\": \"primary\",\n" +
+            "                \"app.kubernetes.io/instance\": \"afterburner-db\",\n" +
+            "                \"app.kubernetes.io/name\": \"mysql\"\n" +
+            "            }\n" +
+            "        },\n" +
+            "        \"serviceName\": \"afterburner-db-mysql\",\n" +
+            "        \"template\": {\n" +
+            "            \"metadata\": {\n" +
+            "                \"annotations\": {\n" +
+            "                    \"checksum/configuration\": \"bdd6432051bcb4618e7f43cbdf32cb616181e6e79b09364d37becbaa777c8582\"\n" +
+            "                },\n" +
+            "                \"creationTimestamp\": null,\n" +
+            "                \"labels\": {\n" +
+            "                    \"app.kubernetes.io/component\": \"primary\",\n" +
+            "                    \"app.kubernetes.io/instance\": \"afterburner-db\",\n" +
+            "                    \"app.kubernetes.io/managed-by\": \"Helm\",\n" +
+            "                    \"app.kubernetes.io/name\": \"mysql\",\n" +
+            "                    \"helm.sh/chart\": \"mysql-9.2.6\"\n" +
+            "                }\n" +
+            "            },\n" +
+            "            \"spec\": {\n" +
+            "                \"affinity\": {\n" +
+            "                    \"podAntiAffinity\": {\n" +
+            "                        \"preferredDuringSchedulingIgnoredDuringExecution\": [\n" +
+            "                            {\n" +
+            "                                \"podAffinityTerm\": {\n" +
+            "                                    \"labelSelector\": {\n" +
+            "                                        \"matchLabels\": {\n" +
+            "                                            \"app.kubernetes.io/instance\": \"afterburner-db\",\n" +
+            "                                            \"app.kubernetes.io/name\": \"mysql\"\n" +
+            "                                        }\n" +
+            "                                    },\n" +
+            "                                    \"namespaces\": [\n" +
+            "                                        \"acme\"\n" +
+            "                                    ],\n" +
+            "                                    \"topologyKey\": \"kubernetes.io/hostname\"\n" +
+            "                                },\n" +
+            "                                \"weight\": 1\n" +
+            "                            }\n" +
+            "                        ]\n" +
+            "                    }\n" +
+            "                },\n" +
+            "                \"containers\": [\n" +
+            "                    {\n" +
+            "                        \"env\": [\n" +
+            "                            {\n" +
+            "                                \"name\": \"BITNAMI_DEBUG\",\n" +
+            "                                \"value\": \"false\"\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"name\": \"MYSQL_ROOT_PASSWORD\",\n" +
+            "                                \"valueFrom\": {\n" +
+            "                                    \"secretKeyRef\": {\n" +
+            "                                        \"key\": \"mysql-root-password\",\n" +
+            "                                        \"name\": \"mysql-credentials\"\n" +
+            "                                    }\n" +
+            "                                }\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"name\": \"MYSQL_USER\",\n" +
+            "                                \"value\": \"afterburner\"\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"name\": \"MYSQL_PASSWORD\",\n" +
+            "                                \"valueFrom\": {\n" +
+            "                                    \"secretKeyRef\": {\n" +
+            "                                        \"key\": \"mysql-password\",\n" +
+            "                                        \"name\": \"mysql-credentials\"\n" +
+            "                                    }\n" +
+            "                                }\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"name\": \"MYSQL_DATABASE\",\n" +
+            "                                \"value\": \"employees\"\n" +
+            "                            }\n" +
+            "                        ],\n" +
+            "                        \"image\": \"docker.io/bitnami/mysql:8.0.30-debian-11-r6\",\n" +
+            "                        \"imagePullPolicy\": \"IfNotPresent\",\n" +
+            "                        \"livenessProbe\": {\n" +
+            "                            \"exec\": {\n" +
+            "                                \"command\": [\n" +
+            "                                    \"/bin/bash\",\n" +
+            "                                    \"-ec\",\n" +
+            "                                    \"password_aux=\\\"${MYSQL_ROOT_PASSWORD:-}\\\"\\nif [[ -f \\\"${MYSQL_ROOT_PASSWORD_FILE:-}\\\" ]]; then\\n    password_aux=$(cat \\\"$MYSQL_ROOT_PASSWORD_FILE\\\")\\nfi\\nmysqladmin status -uroot -p\\\"${password_aux}\\\"\\n\"\n" +
+            "                                ]\n" +
+            "                            },\n" +
+            "                            \"failureThreshold\": 3,\n" +
+            "                            \"initialDelaySeconds\": 5,\n" +
+            "                            \"periodSeconds\": 10,\n" +
+            "                            \"successThreshold\": 1,\n" +
+            "                            \"timeoutSeconds\": 1\n" +
+            "                        },\n" +
+            "                        \"name\": \"mysql\",\n" +
+            "                        \"ports\": [\n" +
+            "                            {\n" +
+            "                                \"containerPort\": 3306,\n" +
+            "                                \"name\": \"mysql\",\n" +
+            "                                \"protocol\": \"TCP\"\n" +
+            "                            }\n" +
+            "                        ],\n" +
+            "                        \"readinessProbe\": {\n" +
+            "                            \"exec\": {\n" +
+            "                                \"command\": [\n" +
+            "                                    \"/bin/bash\",\n" +
+            "                                    \"-ec\",\n" +
+            "                                    \"password_aux=\\\"${MYSQL_ROOT_PASSWORD:-}\\\"\\nif [[ -f \\\"${MYSQL_ROOT_PASSWORD_FILE:-}\\\" ]]; then\\n    password_aux=$(cat \\\"$MYSQL_ROOT_PASSWORD_FILE\\\")\\nfi\\nmysqladmin status -uroot -p\\\"${password_aux}\\\"\\n\"\n" +
+            "                                ]\n" +
+            "                            },\n" +
+            "                            \"failureThreshold\": 3,\n" +
+            "                            \"initialDelaySeconds\": 5,\n" +
+            "                            \"periodSeconds\": 10,\n" +
+            "                            \"successThreshold\": 1,\n" +
+            "                            \"timeoutSeconds\": 1\n" +
+            "                        },\n" +
+            "                        \"resources\": {\n" +
+            "                            \"limits\": {\n" +
+            "                                \"cpu\": \"1500m\",\n" +
+            "                                \"memory\": \"512Mi\"\n" +
+            "                            },\n" +
+            "                            \"requests\": {\n" +
+            "                                \"cpu\": \"100m\",\n" +
+            "                                \"memory\": \"512Mi\"\n" +
+            "                            }\n" +
+            "                        },\n" +
+            "                        \"securityContext\": {\n" +
+            "                            \"runAsNonRoot\": true,\n" +
+            "                            \"runAsUser\": 1001\n" +
+            "                        },\n" +
+            "                        \"startupProbe\": {\n" +
+            "                            \"exec\": {\n" +
+            "                                \"command\": [\n" +
+            "                                    \"/bin/bash\",\n" +
+            "                                    \"-ec\",\n" +
+            "                                    \"password_aux=\\\"${MYSQL_ROOT_PASSWORD:-}\\\"\\nif [[ -f \\\"${MYSQL_ROOT_PASSWORD_FILE:-}\\\" ]]; then\\n    password_aux=$(cat \\\"$MYSQL_ROOT_PASSWORD_FILE\\\")\\nfi\\nmysqladmin status -uroot -p\\\"${password_aux}\\\"\\n\"\n" +
+            "                                ]\n" +
+            "                            },\n" +
+            "                            \"failureThreshold\": 10,\n" +
+            "                            \"initialDelaySeconds\": 15,\n" +
+            "                            \"periodSeconds\": 10,\n" +
+            "                            \"successThreshold\": 1,\n" +
+            "                            \"timeoutSeconds\": 1\n" +
+            "                        },\n" +
+            "                        \"terminationMessagePath\": \"/dev/termination-log\",\n" +
+            "                        \"terminationMessagePolicy\": \"File\",\n" +
+            "                        \"volumeMounts\": [\n" +
+            "                            {\n" +
+            "                                \"mountPath\": \"/bitnami/mysql\",\n" +
+            "                                \"name\": \"data\"\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"mountPath\": \"/opt/bitnami/mysql/conf/my.cnf\",\n" +
+            "                                \"name\": \"config\",\n" +
+            "                                \"subPath\": \"my.cnf\"\n" +
+            "                            },\n" +
+            "                            {\n" +
+            "                                \"mountPath\": \"/tmp\",\n" +
+            "                                \"name\": \"employee-db-mount\"\n" +
+            "                            }\n" +
+            "                        ]\n" +
+            "                    }\n" +
+            "                ],\n" +
+            "                \"dnsPolicy\": \"ClusterFirst\",\n" +
+            "                \"initContainers\": [\n" +
+            "                    {\n" +
+            "                        \"args\": [\n" +
+            "                            \"apk --update add curl; cd /tmp; EMP_DB_URL=\\\"https://github.com/perfana/perfana-demo/raw/master/test_db/employees-original.sql\\\"; EMP_DB=$(basename $EMP_DB_URL); echo \\\"download $EMP_DB_URL\\\"; curl -Ss -O -L $EMP_DB_URL;\"\n" +
+            "                        ],\n" +
+            "                        \"command\": [\n" +
+            "                            \"/bin/sh\",\n" +
+            "                            \"-c\"\n" +
+            "                        ],\n" +
+            "                        \"image\": \"alpine:3.12\",\n" +
+            "                        \"imagePullPolicy\": \"IfNotPresent\",\n" +
+            "                        \"name\": \"load-db-hack\",\n" +
+            "                        \"resources\": {},\n" +
+            "                        \"terminationMessagePath\": \"/dev/termination-log\",\n" +
+            "                        \"terminationMessagePolicy\": \"File\",\n" +
+            "                        \"volumeMounts\": [\n" +
+            "                            {\n" +
+            "                                \"mountPath\": \"/tmp\",\n" +
+            "                                \"name\": \"employee-db-mount\"\n" +
+            "                            }\n" +
+            "                        ]\n" +
+            "                    }\n" +
+            "                ],\n" +
+            "                \"restartPolicy\": \"Always\",\n" +
+            "                \"schedulerName\": \"default-scheduler\",\n" +
+            "                \"securityContext\": {\n" +
+            "                    \"fsGroup\": 1001\n" +
+            "                },\n" +
+            "                \"serviceAccount\": \"afterburner-db-mysql\",\n" +
+            "                \"serviceAccountName\": \"afterburner-db-mysql\",\n" +
+            "                \"terminationGracePeriodSeconds\": 30,\n" +
+            "                \"volumes\": [\n" +
+            "                    {\n" +
+            "                        \"configMap\": {\n" +
+            "                            \"defaultMode\": 420,\n" +
+            "                            \"name\": \"afterburner-db-mysql\"\n" +
+            "                        },\n" +
+            "                        \"name\": \"config\"\n" +
+            "                    },\n" +
+            "                    {\n" +
+            "                        \"name\": \"employee-db-mount\",\n" +
+            "                        \"persistentVolumeClaim\": {\n" +
+            "                            \"claimName\": \"employee-db-volume-pvc\"\n" +
+            "                        }\n" +
+            "                    }\n" +
+            "                ]\n" +
+            "            }\n" +
+            "        },\n" +
+            "        \"updateStrategy\": {\n" +
+            "            \"type\": \"RollingUpdate\"\n" +
+            "        },\n" +
+            "        \"volumeClaimTemplates\": [\n" +
+            "            {\n" +
+            "                \"apiVersion\": \"v1\",\n" +
+            "                \"kind\": \"PersistentVolumeClaim\",\n" +
+            "                \"metadata\": {\n" +
+            "                    \"creationTimestamp\": null,\n" +
+            "                    \"labels\": {\n" +
+            "                        \"app.kubernetes.io/component\": \"primary\",\n" +
+            "                        \"app.kubernetes.io/instance\": \"afterburner-db\",\n" +
+            "                        \"app.kubernetes.io/name\": \"mysql\"\n" +
+            "                    },\n" +
+            "                    \"name\": \"data\"\n" +
+            "                },\n" +
+            "                \"spec\": {\n" +
+            "                    \"accessModes\": [\n" +
+            "                        \"ReadWriteOnce\"\n" +
+            "                    ],\n" +
+            "                    \"resources\": {\n" +
+            "                        \"requests\": {\n" +
+            "                            \"storage\": \"8Gi\"\n" +
+            "                        }\n" +
+            "                    },\n" +
+            "                    \"volumeMode\": \"Filesystem\"\n" +
+            "                },\n" +
+            "                \"status\": {\n" +
+            "                    \"phase\": \"Pending\"\n" +
+            "                }\n" +
+            "            }\n" +
+            "        ]\n" +
+            "    },\n" +
+            "    \"status\": {\n" +
+            "        \"availableReplicas\": 1,\n" +
+            "        \"collisionCount\": 0,\n" +
+            "        \"currentReplicas\": 1,\n" +
+            "        \"currentRevision\": \"afterburner-db-mysql-5bc44b6857\",\n" +
+            "        \"observedGeneration\": 15,\n" +
+            "        \"readyReplicas\": 1,\n" +
+            "        \"replicas\": 1,\n" +
+            "        \"updateRevision\": \"afterburner-db-mysql-5bc44b6857\",\n" +
+            "        \"updatedReplicas\": 1\n" +
+            "    }\n" +
+            "}";
+
     @Test
     void testFlattenJson() {
         Map<String, String> jsonMap = JsonConverter.flatten(SIMPLE_JSON);
@@ -295,6 +581,15 @@ class JsonConverterTest {
 
         assertFalse(jsonMap.containsValue("s3cr3t"), "should not contain a s3cr3t");
         assertEquals(0, jsonMap.size());
+    }
+
+    @Test
+    void testFlattenJsonMySql() {
+        String includes = "env,resources,image,replicas,strategy,kubernetes";
+        String excludes = "status,password,secret";
+
+        Map<String, String> jsonMap = JsonConverter.flatten(MY_SQL_JSON, includes, excludes);
+        assertEquals(31, jsonMap.size());
     }
 
 }
