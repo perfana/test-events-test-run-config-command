@@ -70,8 +70,7 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                 flatJson.forEach((key, value) -> sendTestRunConfigMessage(pluginName, key, value, "key"));
             } else {
                 // output can be key or json here
-                EventMessage message = sendTestRunConfigMessage(pluginName, eventContext.getKey(), commandOutput, output);
-                this.eventMessageBus.send(message);
+                sendTestRunConfigMessage(pluginName, eventContext.getKey(), commandOutput, output);
             }
 
         } catch (InvalidExitValueException e) {
@@ -87,8 +86,9 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
 
     }
 
-    private EventMessage sendTestRunConfigMessage(String pluginName, String key, String value, String output) {
-        return EventMessage.builder()
+    private void sendTestRunConfigMessage(String pluginName, String key, String value, String output) {
+
+        EventMessage message = EventMessage.builder()
                 .pluginName(pluginName)
                 .variable("message-type", "test-run-config")
                 .variable("output", output)
@@ -97,6 +97,8 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                 .variable("excludes", eventContext.getExcludes())
                 .variable("includes", eventContext.getIncludes())
                 .message(value).build();
+
+        eventMessageBus.send(message);
     }
 
     private List<String> splitCommand(String command) {
