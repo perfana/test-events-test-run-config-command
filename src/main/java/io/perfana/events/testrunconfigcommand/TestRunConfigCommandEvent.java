@@ -65,9 +65,12 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
             if ("keys".equals(output)) {
                 // flatten json, apply filters
                 Map<String, String> flatJson = JsonConverter.flatten(commandOutput, eventContext.getIncludes(), eventContext.getExcludes());
+                logger.info("About to send " + flatJson.size() + " flattened key-value pairs");
+                logger.debug("flatJsonMap: " + flatJson);
                 flatJson.forEach((key, value) -> sendTestRunConfigMessage(pluginName, key, value, "key"));
             } else {
-                EventMessage message = sendTestRunConfigMessage(pluginName, "", commandOutput, output);
+                // output can be key or json here
+                EventMessage message = sendTestRunConfigMessage(pluginName, eventContext.getKey(), commandOutput, output);
                 this.eventMessageBus.send(message);
             }
 
