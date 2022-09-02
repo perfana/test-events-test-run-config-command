@@ -2,7 +2,8 @@
 
 Run a command to capture test-run configuration data and broadcast this on the event message bus. 
 
-Test-run config can be sent as key-value pair or as json structure.
+Test-run config can be sent as key-value pair (output = key) or as json structure (output = json)
+or as "flattened" json structure is a key-value list (output = keys).
 
 Json can contain include and exclude fields to indicate what to compare and what to ignore to be stored and in the compare.
 

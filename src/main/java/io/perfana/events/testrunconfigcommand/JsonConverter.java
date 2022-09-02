@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 import io.perfana.eventscheduler.exception.EventSchedulerRuntimeException;
+import io.perfana.eventscheduler.util.JavaArgsParser;
 
 import java.io.IOException;
 import java.util.*;
@@ -109,8 +110,16 @@ public class JsonConverter {
     private static void addNameValuePairs(String pathPrefix, ArrayNode jsonNode, Map<String, String> map) {
         for (int i = 0; i < jsonNode.size(); i++) {
             JsonNode propNode = jsonNode.get(i);
+            String name = propNode.get("name").asText();
             String value = getK8sPropValue(propNode);
-            map.put(pathPrefix + "." + i + "." + propNode.get("name").asText(), value);
+            if (name.equals("JAVA_OPTS") || name.equals("JDK_JAVA_OPTIONS") || name.equals("JAVA_TOOL_OPTIONS")) {
+                Map<String, String> jvmArgsMap = JavaArgsParser.createJvmArgsTestConfigLines(value);
+                int finalI = i;
+                jvmArgsMap.forEach((n, v) -> map.put(pathPrefix + "." + finalI + "." + name + "." + n, v));
+            }
+            else {
+                map.put(pathPrefix + "." + i + "." + name, value);
+            }
         }
     }
 

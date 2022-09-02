@@ -554,7 +554,7 @@ class JsonConverterTest {
         Map<String, String> jsonMap = JsonConverter.flatten(K8S_JSON);
 
         assertEquals("25%", jsonMap.get("spec.strategy.rollingUpdate.maxSurge"));
-        assertEquals("-Xmx312m", jsonMap.get("spec.template.spec.containers.0.env.0.JAVA_OPTS"));
+        assertEquals("312m", jsonMap.get("spec.template.spec.containers.0.env.0.JAVA_OPTS.jvmArg.Xmx"));
         assertEquals(95, jsonMap.size());
     }
 
