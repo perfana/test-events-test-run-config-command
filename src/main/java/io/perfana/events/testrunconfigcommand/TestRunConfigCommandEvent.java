@@ -20,6 +20,7 @@ import io.perfana.eventscheduler.api.EventLogger;
 import io.perfana.eventscheduler.api.message.EventMessage;
 import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.exception.EventSchedulerRuntimeException;
+import io.perfana.eventscheduler.util.TestRunConfigUtil;
 import org.zeroturnaround.exec.InvalidExitValueException;
 import org.zeroturnaround.exec.ProcessExecutor;
 
@@ -67,14 +68,23 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                 Map<String, String> flatJson = JsonConverter.flatten(commandOutput, eventContext.getIncludes(), eventContext.getExcludes());
                 logger.info("About to send " + flatJson.size() + " flattened key-value pairs");
                 logger.debug("flatJsonMap: " + flatJson);
-                List<String> keyValuePairs = new ArrayList<>();
-                flatJson.forEach((key, value) -> { keyValuePairs.add(key); keyValuePairs.add(value); });
-                sendTestRunConfigMessageKeys(pluginName, keyValuePairs);
+                EventMessage message = TestRunConfigUtil.createTestRunConfigMessageKeys(
+                        pluginName,
+                        flatJson,
+                        eventContext.getTags());
+                eventMessageBus.send(message);
             } else {
                 // output can be key or json here
-                sendTestRunConfigMessage(pluginName, eventContext.getKey(), commandOutput, output);
+                EventMessage message = TestRunConfigUtil.createTestRunConfigMessage(
+                        pluginName,
+                        eventContext.getKey(),
+                        commandOutput,
+                        output,
+                        eventContext.getTags(),
+                        eventContext.getExcludes(),
+                        eventContext.getIncludes());
+                eventMessageBus.send(message);
             }
-
         } catch (InvalidExitValueException e) {
             throw new EventSchedulerRuntimeException("Unexpected exit value.", e);
         } catch (IOException e) {
@@ -86,35 +96,6 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
             throw new EventSchedulerRuntimeException("Got timeout for command [" + command + "]", e);
         }
 
-    }
-
-    private void sendTestRunConfigMessage(String pluginName, String key, String value, String output) {
-
-        EventMessage message = EventMessage.builder()
-                .pluginName(pluginName)
-                .variable("message-type", "test-run-config")
-                .variable("output", output)
-                .variable("key", key)
-                .variable("tags", eventContext.getTags())
-                .variable("excludes", eventContext.getExcludes())
-                .variable("includes", eventContext.getIncludes())
-                .message(value).build();
-
-        eventMessageBus.send(message);
-    }
-
-    private void sendTestRunConfigMessageKeys(String pluginName, List<String> keyValuePairs) {
-
-        EventMessage message = EventMessage.builder()
-                .pluginName(pluginName)
-                .variable("message-type", "test-run-config")
-                .variable("output", "keys")
-                .variable("tags", eventContext.getTags())
-                .variable("excludes", eventContext.getExcludes())
-                .variable("includes", eventContext.getIncludes())
-                .message(String.join(",", keyValuePairs)).build();
-
-        eventMessageBus.send(message);
     }
 
     private List<String> splitCommand(String command) {
