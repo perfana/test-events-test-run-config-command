@@ -67,7 +67,9 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                 Map<String, String> flatJson = JsonConverter.flatten(commandOutput, eventContext.getIncludes(), eventContext.getExcludes());
                 logger.info("About to send " + flatJson.size() + " flattened key-value pairs");
                 logger.debug("flatJsonMap: " + flatJson);
-                flatJson.forEach((key, value) -> sendTestRunConfigMessage(pluginName, key, value, "key"));
+                List<String> keyValuePairs = new ArrayList<>();
+                flatJson.forEach((key, value) -> { keyValuePairs.add(key); keyValuePairs.add(value); });
+                sendTestRunConfigMessageKeys(pluginName, keyValuePairs);
             } else {
                 // output can be key or json here
                 sendTestRunConfigMessage(pluginName, eventContext.getKey(), commandOutput, output);
@@ -97,6 +99,20 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
                 .variable("excludes", eventContext.getExcludes())
                 .variable("includes", eventContext.getIncludes())
                 .message(value).build();
+
+        eventMessageBus.send(message);
+    }
+
+    private void sendTestRunConfigMessageKeys(String pluginName, List<String> keyValuePairs) {
+
+        EventMessage message = EventMessage.builder()
+                .pluginName(pluginName)
+                .variable("message-type", "test-run-config")
+                .variable("output", "keys")
+                .variable("tags", eventContext.getTags())
+                .variable("excludes", eventContext.getExcludes())
+                .variable("includes", eventContext.getIncludes())
+                .message(String.join(",", keyValuePairs)).build();
 
         eventMessageBus.send(message);
     }
