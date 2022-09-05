@@ -112,7 +112,7 @@ public class JsonConverter {
             JsonNode propNode = jsonNode.get(i);
             String name = propNode.get("name").asText();
             String value = getK8sPropValue(propNode);
-            if (name.equals("JAVA_OPTS") || name.equals("JDK_JAVA_OPTIONS") || name.equals("JAVA_TOOL_OPTIONS")) {
+            if (JavaArgsParser.isJavaCommandArgsProperty(name)) {
                 Map<String, String> jvmArgsMap = JavaArgsParser.createJvmArgsTestConfigLines(value);
                 int finalI = i;
                 jvmArgsMap.forEach((n, v) -> map.put(pathPrefix + "." + finalI + "." + name + "." + n, v));
