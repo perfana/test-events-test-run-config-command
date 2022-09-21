@@ -554,7 +554,7 @@ class JsonConverterTest {
         Map<String, String> jsonMap = JsonConverter.flatten(K8S_JSON);
 
         assertEquals("25%", jsonMap.get("spec.strategy.rollingUpdate.maxSurge"));
-        assertEquals("312m", jsonMap.get("spec.template.spec.containers.0.env.0.JAVA_OPTS.jvmArg.Xmx"));
+        assertEquals("312m", jsonMap.get("spec.template.spec.containers.0.env.JAVA_OPTS.jvmArg.Xmx"));
         assertEquals(95, jsonMap.size());
     }
 
@@ -567,8 +567,8 @@ class JsonConverterTest {
 
         assertNull(jsonMap.get("status.updatedReplicas"));
         assertFalse(jsonMap.containsValue("s3cr3t"), "should not contain a s3cr3t");
-        assertNull(jsonMap.get("spec.template.spec.containers.0.env.3.PYROSCOPE_AUTH_TOKEN"));
-        assertNull(jsonMap.get("spec.template.spec.containers.0.env.11.afterburner.datasource.employee.password"));
+        assertNull(jsonMap.get("spec.template.spec.containers.0.env.PYROSCOPE_AUTH_TOKEN"));
+        assertNull(jsonMap.get("spec.template.spec.containers.0.env.afterburner.datasource.employee.password"));
         assertEquals(48, jsonMap.size());
     }
 
