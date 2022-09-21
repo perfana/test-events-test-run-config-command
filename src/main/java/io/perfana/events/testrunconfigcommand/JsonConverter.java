@@ -117,7 +117,7 @@ public class JsonConverter {
                 jvmArgsMap.forEach((n, v) -> map.put(pathPrefix + "." + name + "." + n, v));
             }
             else {
-                map.put(pathPrefix + "." + i + "." + name, value);
+                map.put(pathPrefix + "." + name, value);
             }
         }
     }

@@ -570,6 +570,8 @@ class JsonConverterTest {
         assertNull(jsonMap.get("spec.template.spec.containers.0.env.PYROSCOPE_AUTH_TOKEN"));
         assertNull(jsonMap.get("spec.template.spec.containers.0.env.afterburner.datasource.employee.password"));
         assertEquals(48, jsonMap.size());
+        // this should match, without an env index number
+        assertEquals("13ms", jsonMap.get("spec.template.spec.containers.0.env.PYROSCOPE_PROFILING_INTERVAL"));
     }
 
     @Test
