@@ -30,12 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommandEventContext> {
-
-    public static final Pattern REGEX_SPLIT_QUOTES = Pattern.compile("\"([^\"]*)\"|(\\S+)");
 
     public TestRunConfigCommandEvent(TestRunConfigCommandEventContext eventContext, EventMessageBus messageBus, EventLogger logger) {
         super(eventContext, messageBus, logger);
@@ -46,11 +42,11 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
 
         String pluginName = TestRunConfigCommandEvent.class.getSimpleName() + "-" + eventContext.getName();
 
-        String command = eventContext.getCommand();
+        final String command = eventContext.getCommand();
 
         logger.info("About to run [" + command + "] for [" + eventContext.getTestContext().getTestRunId() + "]");
 
-        List<String> commandList = splitCommand(command);
+        List<String> commandList = createCommandListWithShWrapper(command);
 
         try {
             String commandOutput = new ProcessExecutor()
@@ -95,22 +91,26 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
         } catch (TimeoutException e) {
             throw new EventSchedulerRuntimeException("Got timeout for command [" + command + "]", e);
         }
-
     }
 
-    private List<String> splitCommand(String command) {
-        // https://stackoverflow.com/questions/3366281/tokenizing-a-string-but-ignoring-delimiters-within-quotes
-        Matcher m = REGEX_SPLIT_QUOTES.matcher(command);
-        List<String> commandList = new ArrayList<>();
-        while (m.find()) {
-            if (m.group(1) != null) {
-                // Quoted
-                commandList.add(m.group(1));
-            } else {
-                // Plain
-                commandList.add(m.group(2));
+    public static List<String> createCommandListWithShWrapper(String command) {
+        String strippedCommand;
+        if (command.startsWith("sh -c")) {
+            strippedCommand = command.substring("sh -c".length()).trim();
+            if ((strippedCommand.startsWith("'") && strippedCommand.endsWith("'"))
+                  || (strippedCommand.startsWith("\"") && strippedCommand.endsWith("\""))) {
+                strippedCommand = strippedCommand.substring(1, strippedCommand.length() - 1);
             }
         }
+        else {
+           strippedCommand = command;
+        }
+
+        List<String> commandList = new ArrayList<>();
+        commandList.add("sh");
+        commandList.add("-c");
+        commandList.add(strippedCommand.trim());
         return commandList;
     }
+
 }

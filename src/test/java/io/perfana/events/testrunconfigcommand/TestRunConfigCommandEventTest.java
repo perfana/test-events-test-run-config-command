@@ -20,6 +20,11 @@ import io.perfana.eventscheduler.api.config.TestConfig;
 import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.log.EventLoggerStdOut;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TestRunConfigCommandEventTest {
 
@@ -57,7 +62,8 @@ class TestRunConfigCommandEventTest {
         eventConfig.setEnabled(true);
         eventConfig.setTestConfig(TestConfig.builder().build());
         //eventConfig.setCommand("kubectl get deployment -n acme -o=json optimus-prime-be-afterburner");
-        eventConfig.setCommand("echo { \"test\": 123 }");
+        // without sh -c wrapping, this command with pipe will fail
+        eventConfig.setCommand("sh -c 'ls | grep \"pom.xml\"'");
         eventConfig.setOutput("json");
         eventConfig.setIncludes("env,resources,image,replicas,strategy,kubernetes");
         eventConfig.setExcludes("status");
@@ -85,4 +91,30 @@ class TestRunConfigCommandEventTest {
         }
     }
 
+    @Test
+    void createCommandListWithShWrapper() {
+        List<String> list = TestRunConfigCommandEvent.createCommandListWithShWrapper("ls");
+        assertEquals(3, list.size());
+        assertEquals("sh", list.get(0));
+        assertEquals("-c", list.get(1));
+        assertEquals("ls", list.get(2));
+    }
+
+    @Test
+    void createCommandListWithShWrapperQuotesAndWhitespace() {
+        List<String> list = TestRunConfigCommandEvent.createCommandListWithShWrapper("  ls | grep \"pom\" | curl -X GET 'https://bla?test=true&count=3'   ");
+        assertEquals(3, list.size());
+        assertEquals("sh", list.get(0));
+        assertEquals("-c", list.get(1));
+        assertEquals("ls | grep \"pom\" | curl -X GET 'https://bla?test=true&count=3'", list.get(2));
+    }
+
+    @Test
+    void createCommandListWithShWrapperShCIgnored() {
+        List<String> list = TestRunConfigCommandEvent.createCommandListWithShWrapper("sh -c   \"  ls | grep \"pom\" | curl -X GET 'https://bla\\?test=true\\&count=3'  \"  ");
+        assertEquals(3, list.size());
+        assertEquals("sh", list.get(0));
+        assertEquals("-c", list.get(1));
+        assertEquals("ls | grep \"pom\" | curl -X GET 'https://bla\\?test=true\\&count=3'", list.get(2));
+    }
 }

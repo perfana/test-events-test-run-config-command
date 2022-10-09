@@ -25,12 +25,12 @@ public class JsonConverter {
 
     /**
      * Flatten a json structure to flat key-value pairs.
-     *
+     * <p>
      * Based on <a href="https://stackoverflow.com/questions/20355261/how-to-deserialize-json-into-flat-map-like-structure#answer-24150263">...</a>
-     *
-     * Has some knowledge about kubernetes json: turns container env variables (name,value pairs) into keys that con
+     * <p>
+     * Has some knowledge about kubernetes json: turns container env variables (name,value pairs) into keys that
      * contain the name.
-     *
+     * <p>
      * Example: spec.template.spec.containers.0.env.1.JDK_JAVA_OPTIONS=-javaagent:/super-agent.jar
      *
      * @param json a json text
