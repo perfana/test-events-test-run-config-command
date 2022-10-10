@@ -23,7 +23,7 @@
 
     <groupId>io.perfana</groupId>
     <artifactId>test-events-test-run-config-command</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <description>Execute command and broadcast output to event-message-bus as key-value or json.</description>
     <packaging>jar</packaging>
 
