@@ -17,6 +17,7 @@ package io.perfana.events.testrunconfigcommand;
 
 import io.perfana.eventscheduler.api.EventAdapter;
 import io.perfana.eventscheduler.api.EventLogger;
+import io.perfana.eventscheduler.api.config.TestContext;
 import io.perfana.eventscheduler.api.message.EventMessage;
 import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.exception.EventSchedulerRuntimeException;
@@ -33,8 +34,8 @@ import java.util.concurrent.TimeoutException;
 
 public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommandEventContext> {
 
-    public TestRunConfigCommandEvent(TestRunConfigCommandEventContext eventContext, EventMessageBus messageBus, EventLogger logger) {
-        super(eventContext, messageBus, logger);
+    public TestRunConfigCommandEvent(TestRunConfigCommandEventContext eventContext, TestContext testContext, EventMessageBus messageBus, EventLogger logger) {
+        super(eventContext, testContext, messageBus, logger);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class TestRunConfigCommandEvent extends EventAdapter<TestRunConfigCommand
 
         final String command = eventContext.getCommand();
 
-        logger.info("About to run [" + command + "] for [" + eventContext.getTestContext().getTestRunId() + "]");
+        logger.info("About to run [" + command + "] for [" + testContext.getTestRunId() + "]");
 
         List<String> commandList = createCommandListWithShWrapper(command);
 

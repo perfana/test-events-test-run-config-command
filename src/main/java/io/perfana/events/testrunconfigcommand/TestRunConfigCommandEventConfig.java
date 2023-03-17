@@ -16,7 +16,6 @@
 package io.perfana.events.testrunconfigcommand;
 
 import io.perfana.eventscheduler.api.config.EventConfig;
-import io.perfana.eventscheduler.api.config.TestContext;
 import net.jcip.annotations.NotThreadSafe;
 
 @NotThreadSafe
@@ -32,11 +31,6 @@ public class TestRunConfigCommandEventConfig extends EventConfig {
     @Override
     public TestRunConfigCommandEventContext toContext() {
         return new TestRunConfigCommandEventContext(super.toContext(), command, output, includes, excludes, key, tags);
-    }
-
-    @Override
-    public TestRunConfigCommandEventContext toContext(TestContext override) {
-        return new TestRunConfigCommandEventContext(super.toContext(override), command, output, includes, excludes, key, tags);
     }
 
     @Override

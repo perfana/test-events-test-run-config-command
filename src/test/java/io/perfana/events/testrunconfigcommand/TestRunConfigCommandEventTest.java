@@ -17,10 +17,10 @@ package io.perfana.events.testrunconfigcommand;
 
 import io.perfana.eventscheduler.EventMessageBusSimple;
 import io.perfana.eventscheduler.api.config.TestConfig;
+import io.perfana.eventscheduler.api.config.TestContext;
 import io.perfana.eventscheduler.api.message.EventMessageBus;
 import io.perfana.eventscheduler.log.EventLoggerStdOut;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.List;
 
@@ -34,7 +34,6 @@ class TestRunConfigCommandEventTest {
         eventConfig.setEventFactory(TestRunConfigCommandEventFactory.class.getSimpleName());
         eventConfig.setName("GitGetHash");
         eventConfig.setEnabled(true);
-        eventConfig.setTestConfig(TestConfig.builder().build());
         eventConfig.setCommand("git rev-parse --verify HEAD");
         eventConfig.setOutput("key");
         eventConfig.setKey("https://github.com/perfana/perfana-gatling-afterburner");
@@ -42,7 +41,9 @@ class TestRunConfigCommandEventTest {
 
         EventMessageBus messageBus = new EventMessageBusSimple();
 
-        TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventConfig.toContext(), messageBus, EventLoggerStdOut.INSTANCE);
+        TestContext testContext = TestConfig.builder().build().toContext();
+        TestRunConfigCommandEventContext eventContext = eventConfig.toContext();
+        TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventContext, testContext, messageBus, EventLoggerStdOut.INSTANCE);
         event.beforeTest();
         event.keepAlive();
         shortSleep();
@@ -60,7 +61,6 @@ class TestRunConfigCommandEventTest {
         eventConfig.setEventFactory(TestRunConfigCommandEventFactory.class.getSimpleName());
         eventConfig.setName("KubernetesGetDeployment");
         eventConfig.setEnabled(true);
-        eventConfig.setTestConfig(TestConfig.builder().build());
         //eventConfig.setCommand("kubectl get deployment -n acme -o=json optimus-prime-be-afterburner");
         // without sh -c wrapping, this command with pipe will fail
         eventConfig.setCommand("sh -c 'ls | grep \"pom.xml\"'");
@@ -71,7 +71,9 @@ class TestRunConfigCommandEventTest {
 
         EventMessageBus messageBus = new EventMessageBusSimple();
 
-        TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventConfig.toContext(), messageBus, EventLoggerStdOut.INSTANCE);
+        TestContext testContext = TestConfig.builder().build().toContext();
+        TestRunConfigCommandEventContext eventContext = eventConfig.toContext();
+        TestRunConfigCommandEvent event = new TestRunConfigCommandEvent(eventContext, testContext, messageBus, EventLoggerStdOut.INSTANCE);
         event.beforeTest();
         event.keepAlive();
         shortSleep();

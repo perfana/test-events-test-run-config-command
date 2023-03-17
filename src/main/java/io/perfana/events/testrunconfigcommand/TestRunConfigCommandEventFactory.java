@@ -18,12 +18,13 @@ package io.perfana.events.testrunconfigcommand;
 import io.perfana.eventscheduler.api.Event;
 import io.perfana.eventscheduler.api.EventFactory;
 import io.perfana.eventscheduler.api.EventLogger;
+import io.perfana.eventscheduler.api.config.TestContext;
 import io.perfana.eventscheduler.api.message.EventMessageBus;
 
 public class TestRunConfigCommandEventFactory implements EventFactory<TestRunConfigCommandEventContext> {
 
     @Override
-    public Event create(TestRunConfigCommandEventContext context, EventMessageBus messageBus, EventLogger eventLogger) {
-        return new TestRunConfigCommandEvent(context, messageBus, eventLogger);
+    public Event create(TestRunConfigCommandEventContext context, TestContext testContext, EventMessageBus messageBus, EventLogger eventLogger) {
+        return new TestRunConfigCommandEvent(context, testContext, messageBus, eventLogger);
     }
 }
