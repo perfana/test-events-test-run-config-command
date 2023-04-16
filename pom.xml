@@ -23,7 +23,7 @@
 
     <groupId>io.perfana</groupId>
     <artifactId>test-events-test-run-config-command</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <description>Execute command and broadcast output to event-message-bus as key-value or json.</description>
     <packaging>jar</packaging>
 
@@ -90,7 +90,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
     </properties>
 
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>io.perfana</groupId>
             <artifactId>event-scheduler</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -138,6 +138,7 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.10.1</version>
                 </plugin>
@@ -164,7 +165,7 @@
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>4.2.rc3</version>
+                    <version>4.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -269,10 +270,6 @@
                         <arg>loopback</arg>
                     </gpgArguments>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
