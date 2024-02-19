@@ -49,7 +49,7 @@ Tags are used to specify the type of configuration data (e.g. GitHub or k8s).
                         <command>kubectl get deployment optimus-prime-be-afterburner -n acme -o json</command>
                         <includes>env,resources,image,replicas,strategy,kubernetes</includes>
                         <excludes>status</excludes>
-                        <output>json</output>
+                        <output>keys</output>
                         <tags>kubernetes,optimus-prime-be</tags>
                     </eventConfig>
                 </eventConfigs>
